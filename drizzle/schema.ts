@@ -251,3 +251,24 @@ export const dailySnapshots = pgTable("daily_snapshots", {
 
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
+// ============================================
+// 盤點記錄表 (Stock Takes)
+// ============================================
+export const stockTakesStatusEnum = pgEnum("stocktake_status", ["draft", "completed"]);
+
+export const stockTakes = pgTable("stock_takes", {
+  id: serial("id").primaryKey(),
+  storeId: integer("storeId").notNull(),
+  stocktakeDate: date("stocktakeDate").notNull(),
+  month: varchar("month", { length: 7 }).notNull(), // YYYY-MM
+  status: stockTakesStatusEnum("status").default("draft").notNull(),
+  createdById: integer("createdById").notNull(),
+  createdByName: varchar("createdByName", { length: 128 }),
+  completedAt: timestamp("completedAt"),
+  note: text("note"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type StockTake = typeof stockTakes.$inferSelect;
+export type InsertStockTake = typeof stockTakes.$inferInsert;
