@@ -15,6 +15,17 @@ import {
 // Enums
 // ============================================
 export const roleEnum = pgEnum("role", ["user", "admin", "store_manager"]);
+export const transactionTypeEnum = pgEnum("transaction_type", [
+  "inbound",
+  "outbound",
+  "adjustment_in",
+  "adjustment_out",
+  "conversion",
+  "stocktake",
+  "cancel",
+]);
+
+export const transactionSourceEnum = pgEnum("transaction_source", ["web", "line", "system"]);
 
 // ============================================
 // 使用者表 (Users)
@@ -113,3 +124,32 @@ export const inventory = pgTable(
 
 export type Inventory = typeof inventory.$inferSelect;
 export type InsertInventory = typeof inventory.$inferInsert;
+// ============================================
+// 交易記錄表 (Transactions)
+// ============================================
+export const transactions = pgTable("transactions", {
+  id: serial("id").primaryKey(),
+  storeId: integer("storeId").notNull(),
+  productId: integer("productId").notNull(),
+  type: transactionTypeEnum("type").notNull(),
+  quantityCase: integer("quantityCase").default(0).notNull(),
+  quantityUnit: integer("quantityUnit").default(0).notNull(),
+  unitCostCase: numeric("unitCostCase", { precision: 10, scale: 2 }),
+  unitCostUnit: numeric("unitCostUnit", { precision: 10, scale: 2 }),
+  totalCost: numeric("totalCost", { precision: 12, scale: 2 }),
+  businessDate: date("businessDate").notNull(),
+  transactionTime: timestamp("transactionTime").defaultNow().notNull(),
+  source: transactionSourceEnum("source").default("web").notNull(),
+  operatorId: integer("operatorId"),
+  operatorName: varchar("operatorName", { length: 128 }),
+  adjustmentId: integer("adjustmentId"),
+  stocktakeId: integer("stocktakeId"),
+  cancelledById: integer("cancelledById"),
+  cancelledTransactionId: integer("cancelledTransactionId"),
+  note: text("note"),
+  isCancelled: boolean("isCancelled").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Transaction = typeof transactions.$inferSelect;
+export type InsertTransaction = typeof transactions.$inferInsert;
