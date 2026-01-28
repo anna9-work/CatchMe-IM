@@ -153,3 +153,36 @@ export const transactions = pgTable("transactions", {
 
 export type Transaction = typeof transactions.$inferSelect;
 export type InsertTransaction = typeof transactions.$inferInsert;
+// ============================================
+// 異動單表 (Adjustments)
+// ============================================
+export const adjustmentTypeEnum = pgEnum("adjustment_type", [
+  "補出庫",
+  "補入庫",
+  "箱散轉換",
+]);
+
+export const adjustmentStatusEnum = pgEnum("adjustment_status", [
+  "pending",
+  "approved",
+  "rejected",
+]);
+
+export const adjustments = pgTable("adjustments", {
+  id: serial("id").primaryKey(),
+  storeId: integer("storeId").notNull(),
+  type: adjustmentTypeEnum("type").notNull(),
+  adjustmentDate: date("adjustmentDate").notNull(),
+  status: adjustmentStatusEnum("status").default("pending").notNull(),
+  reason: text("reason"),
+  createdById: integer("createdById").notNull(),
+  createdByName: varchar("createdByName", { length: 128 }),
+  approvedById: integer("approvedById"),
+  approvedByName: varchar("approvedByName", { length: 128 }),
+  approvedAt: timestamp("approvedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type Adjustment = typeof adjustments.$inferSelect;
+export type InsertAdjustment = typeof adjustments.$inferInsert;
