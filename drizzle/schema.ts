@@ -63,3 +63,29 @@ export const stores = pgTable(
 
 export type Store = typeof stores.$inferSelect;
 export type InsertStore = typeof stores.$inferInsert;
+// ============================================
+// 商品主檔表 (Products)
+// ============================================
+export const products = pgTable(
+  "products",
+  {
+    id: serial("id").primaryKey(),
+    sku: varchar("sku", { length: 64 }).notNull(),
+    name: varchar("name", { length: 256 }).notNull(),
+    barcode: varchar("barcode", { length: 64 }),
+    unitsPerCase: integer("unitsPerCase").default(1).notNull(),
+    unitPrice: numeric("unitPrice", { precision: 10, scale: 2 }).default("0").notNull(),
+    safetyStockCase: integer("safetyStockCase").default(0).notNull(),
+    safetyStockUnit: integer("safetyStockUnit").default(0).notNull(),
+    category: varchar("category", { length: 64 }),
+    isActive: boolean("isActive").default(true).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (t) => ({
+    skuUnique: uniqueIndex("products_sku_unique").on(t.sku),
+  })
+);
+
+export type Product = typeof products.$inferSelect;
+export type InsertProduct = typeof products.$inferInsert;
