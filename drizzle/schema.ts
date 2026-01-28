@@ -206,3 +206,48 @@ export const adjustmentItems = pgTable("adjustment_items", {
 
 export type AdjustmentItem = typeof adjustmentItems.$inferSelect;
 export type InsertAdjustmentItem = typeof adjustmentItems.$inferInsert;
+// ============================================
+// 每日庫存快照表 (Daily Snapshots)
+// ============================================
+export const dailySnapshots = pgTable("daily_snapshots", {
+  id: serial("id").primaryKey(),
+  storeId: integer("storeId").notNull(),
+  productId: integer("productId").notNull(),
+  snapshotDate: date("snapshotDate").notNull(),
+
+  // 期初
+  openingCase: integer("openingCase").default(0).notNull(),
+  openingUnit: integer("openingUnit").default(0).notNull(),
+  openingCostCase: numeric("openingCostCase", { precision: 12, scale: 2 }).default("0").notNull(),
+  openingCostUnit: numeric("openingCostUnit", { precision: 12, scale: 2 }).default("0").notNull(),
+
+  // 入庫
+  inboundCase: integer("inboundCase").default(0).notNull(),
+  inboundUnit: integer("inboundUnit").default(0).notNull(),
+  inboundCostCase: numeric("inboundCostCase", { precision: 12, scale: 2 }).default("0").notNull(),
+  inboundCostUnit: numeric("inboundCostUnit", { precision: 12, scale: 2 }).default("0").notNull(),
+
+  // 出庫
+  outboundCase: integer("outboundCase").default(0).notNull(),
+  outboundUnit: integer("outboundUnit").default(0).notNull(),
+  outboundCostCase: numeric("outboundCostCase", { precision: 12, scale: 2 }).default("0").notNull(),
+  outboundCostUnit: numeric("outboundCostUnit", { precision: 12, scale: 2 }).default("0").notNull(),
+
+  // 盤點調整
+  adjustmentCase: integer("adjustmentCase").default(0).notNull(),
+  adjustmentUnit: integer("adjustmentUnit").default(0).notNull(),
+  adjustmentCostCase: numeric("adjustmentCostCase", { precision: 12, scale: 2 }).default("0").notNull(),
+  adjustmentCostUnit: numeric("adjustmentCostUnit", { precision: 12, scale: 2 }).default("0").notNull(),
+
+  // 期末
+  closingCase: integer("closingCase").default(0).notNull(),
+  closingUnit: integer("closingUnit").default(0).notNull(),
+  closingCostCase: numeric("closingCostCase", { precision: 12, scale: 2 }).default("0").notNull(),
+  closingCostUnit: numeric("closingCostUnit", { precision: 12, scale: 2 }).default("0").notNull(),
+
+  // 平均成本
+  avgCostCase: numeric("avgCostCase", { precision: 10, scale: 2 }).default("0").notNull(),
+  avgCostUnit: numeric("avgCostUnit", { precision: 10, scale: 2 }).default("0").notNull(),
+
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
