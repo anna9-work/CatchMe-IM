@@ -89,3 +89,27 @@ export const products = pgTable(
 
 export type Product = typeof products.$inferSelect;
 export type InsertProduct = typeof products.$inferInsert;
+// ============================================
+// 庫存表 (Inventory)
+// ============================================
+export const inventory = pgTable(
+  "inventory",
+  {
+    id: serial("id").primaryKey(),
+    storeId: integer("storeId").notNull(),
+    productId: integer("productId").notNull(),
+    quantityCase: integer("quantityCase").default(0).notNull(),
+    quantityUnit: integer("quantityUnit").default(0).notNull(),
+    totalCostCase: numeric("totalCostCase", { precision: 12, scale: 2 }).default("0").notNull(),
+    totalCostUnit: numeric("totalCostUnit", { precision: 12, scale: 2 }).default("0").notNull(),
+    avgCostCase: numeric("avgCostCase", { precision: 10, scale: 2 }).default("0").notNull(),
+    avgCostUnit: numeric("avgCostUnit", { precision: 10, scale: 2 }).default("0").notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (t) => ({
+    storeProductUnique: uniqueIndex("inventory_store_product_unique").on(t.storeId, t.productId),
+  })
+);
+
+export type Inventory = typeof inventory.$inferSelect;
+export type InsertInventory = typeof inventory.$inferInsert;
