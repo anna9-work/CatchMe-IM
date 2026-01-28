@@ -272,3 +272,28 @@ export const stockTakes = pgTable("stock_takes", {
 
 export type StockTake = typeof stockTakes.$inferSelect;
 export type InsertStockTake = typeof stockTakes.$inferInsert;
+// ============================================
+// 盤點明細表 (Stock Take Items)
+// ============================================
+export const stockTakeItems = pgTable("stock_take_items", {
+  id: serial("id").primaryKey(),
+  stocktakeId: integer("stocktakeId").notNull(),
+  productId: integer("productId").notNull(),
+
+  // 系統庫存
+  systemCase: integer("systemCase").default(0).notNull(),
+  systemUnit: integer("systemUnit").default(0).notNull(),
+
+  // 實際盤點
+  actualCase: integer("actualCase").default(0).notNull(),
+  actualUnit: integer("actualUnit").default(0).notNull(),
+
+  // 差異
+  diffCase: integer("diffCase").default(0).notNull(),
+  diffUnit: integer("diffUnit").default(0).notNull(),
+
+  note: text("note"),
+});
+
+export type StockTakeItem = typeof stockTakeItems.$inferSelect;
+export type InsertStockTakeItem = typeof stockTakeItems.$inferInsert;
