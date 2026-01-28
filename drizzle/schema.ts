@@ -40,3 +40,26 @@ export const users = pgTable(
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
+// ============================================
+// 分店表 (Stores)
+// ============================================
+export const stores = pgTable(
+  "stores",
+  {
+    id: serial("id").primaryKey(),
+    code: varchar("code", { length: 32 }).notNull(),
+    name: varchar("name", { length: 128 }).notNull(),
+    address: text("address"),
+    phone: varchar("phone", { length: 32 }),
+    lineGroupId: varchar("lineGroupId", { length: 64 }),
+    isActive: boolean("isActive").default(true).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (t) => ({
+    codeUnique: uniqueIndex("stores_code_unique").on(t.code),
+  })
+);
+
+export type Store = typeof stores.$inferSelect;
+export type InsertStore = typeof stores.$inferInsert;
