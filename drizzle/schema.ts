@@ -297,3 +297,24 @@ export const stockTakeItems = pgTable("stock_take_items", {
 
 export type StockTakeItem = typeof stockTakeItems.$inferSelect;
 export type InsertStockTakeItem = typeof stockTakeItems.$inferInsert;
+// ============================================
+// 審計日誌表 (Audit Logs)
+// ============================================
+export const auditActionEnum = pgEnum("audit_action", ["create", "update", "delete"]);
+
+export const auditLogs = pgTable("audit_logs", {
+  id: serial("id").primaryKey(),
+  tableName: varchar("tableName", { length: 64 }).notNull(),
+  recordId: integer("recordId").notNull(),
+  action: auditActionEnum("action").notNull(),
+  oldValue: text("oldValue"),
+  newValue: text("newValue"),
+  operatorId: integer("operatorId"),
+  operatorName: varchar("operatorName", { length: 128 }),
+  ipAddress: varchar("ipAddress", { length: 64 }),
+  userAgent: text("userAgent"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AuditLog = typeof auditLogs.$inferSelect;
+export type InsertAuditLog = typeof auditLogs.$inferInsert;
