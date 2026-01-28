@@ -186,3 +186,23 @@ export const adjustments = pgTable("adjustments", {
 
 export type Adjustment = typeof adjustments.$inferSelect;
 export type InsertAdjustment = typeof adjustments.$inferInsert;
+// ============================================
+// 異動單明細表 (Adjustment Items)
+// ============================================
+export const adjustmentItems = pgTable("adjustment_items", {
+  id: serial("id").primaryKey(),
+  adjustmentId: integer("adjustmentId").notNull(),
+  productId: integer("productId").notNull(),
+  quantityCase: integer("quantityCase").default(0).notNull(),
+  quantityUnit: integer("quantityUnit").default(0).notNull(),
+  unitCostCase: numeric("unitCostCase", { precision: 10, scale: 2 }),
+  unitCostUnit: numeric("unitCostUnit", { precision: 10, scale: 2 }),
+  fromCase: integer("fromCase").default(0),
+  toUnit: integer("toUnit").default(0),
+  fromUnit: integer("fromUnit").default(0),
+  toCase: integer("toCase").default(0),
+  note: text("note"),
+});
+
+export type AdjustmentItem = typeof adjustmentItems.$inferSelect;
+export type InsertAdjustmentItem = typeof adjustmentItems.$inferInsert;
