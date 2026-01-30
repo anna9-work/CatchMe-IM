@@ -576,8 +576,8 @@ async function handleOut_(ev, { sku, whCode, outBox, outPiece }) {
     (r) => skuKey_(r.product_sku) === s && String(r.warehouse_code || '').trim().toLowerCase() === wh,
   );
   const label = one ? String(one.warehouse_name || resolveWarehouseLabel_(wh)).trim() : resolveWarehouseLabel_(wh);
-  const box = one ? pickNum_(one.box ?? 0, 0) : '-';
-  const piece = one ? pickNum_(one.piece ?? 0, 0) : '-';
+  const box = one ? pickNum_(one.box ?? 0, 0) : 0;
+  const piece = one ? pickNum_(one.piece ?? 0, 0) : 0;
 
   setLastSku_(actorKey, s);
   setLastWh_(actorKey, wh);
