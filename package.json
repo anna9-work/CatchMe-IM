@@ -6,7 +6,8 @@
     "dev": "pnpm --filter client dev & pnpm --filter server dev",
     "dev:client": "pnpm --filter client dev",
     "dev:server": "pnpm --filter server dev",
-    "build": "pnpm --filter client build",
+    "build": "pnpm --filter server build",
+    "start": "pnpm --filter server start",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "test": "vitest"
